@@ -157,7 +157,7 @@ class ArduBreathalyzer(object):
             successfull = []
             unsuccessfull = []
 
-            if servicewrapper.check_consumer_tokens('twitter',
+            if servicewrapper.check_consumer_tokens('Twitter',
                                                      kwargs['twt_key'],
                                                      kwargs['twt_secret']):
 
@@ -168,7 +168,7 @@ class ArduBreathalyzer(object):
             else:
                 unsuccessfull.append('Twitter')
 
-            if servicewrapper.check_consumer_tokens('foursquare',
+            if servicewrapper.check_consumer_tokens('Foursquare',
                                                      kwargs['fq_key'],
                                                      kwargs['fq_secret']):
 
@@ -179,7 +179,7 @@ class ArduBreathalyzer(object):
             else:
                 unsuccessfull.append('Foursquare')
 
-            if servicewrapper.check_consumer_tokens('facebook',
+            if servicewrapper.check_consumer_tokens('Facebook',
                                                      kwargs['fb_app_id'],
                                                      kwargs['fb_app_secret']):
 
