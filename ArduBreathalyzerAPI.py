@@ -152,11 +152,6 @@ class ArduBreathalyzer(object):
     def add_services(self, **kwargs):
         """ Checks tokens and adds services to the database. """
 
-        service_count = dbwrapper.get_available_services()
-
-        if service_count != 0:
-            self._show_services = False
-
         if self._show_services:
 
             successfull = []
