@@ -7,8 +7,13 @@ import datetime
 urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_MAROON_URL"])
 
-conn = psycopg2.connect(database='test')
-
+conn = psycopg2.connect(
+    database=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
 
 def create_tables():
 
