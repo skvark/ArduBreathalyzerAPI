@@ -10,24 +10,26 @@ import urllib
 
 def check_consumer_tokens(service, key, secret):
 
-    if service == 'Twitter':
-        auth = tweepy.OAuthHandler(str(key), str(secret))
-        try:
-            auth.get_authorization_url()
-            return True
-        except:
-            pass
+    if key != '' and secret != '':
 
-    if service == 'Foursquare':
-        client = foursquare.Foursquare(str(key), str(secret))
-        try:
-            client.oauth.auth_url()
-            return True
-        except:
-            pass
+        if service == 'Twitter':
+            auth = tweepy.OAuthHandler(str(key), str(secret))
+            try:
+                auth.get_authorization_url()
+                return True
+            except:
+                pass
 
-    if service == 'Facebook':
-        return True
+        if service == 'Foursquare':
+            client = foursquare.Foursquare(str(key), str(secret))
+            try:
+                client.oauth.auth_url()
+                return True
+            except:
+                pass
+
+        if service == 'Facebook':
+            return True
 
     return False
 

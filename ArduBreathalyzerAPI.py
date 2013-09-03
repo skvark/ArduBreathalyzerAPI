@@ -79,7 +79,7 @@ class ArduBreathalyzer(object):
 
     def __init__(self):
 
-        self._services = {}
+        self._services = {'Twitter': '', 'Facebook': '', 'Foursquare': ''}
         self._statuses = {'twt': False, 'fq': False, 'fb': False}
         self._callback_url = ''
         self._show_services = True
@@ -207,7 +207,7 @@ class ArduBreathalyzer(object):
         """
 
         if len(kwargs) != 0:
-            self._services = kwargs
+            self._services.update(kwargs)
 
         if 'user' in self._services:
             authtoken = dbwrapper.add_user(self._services['user'])
