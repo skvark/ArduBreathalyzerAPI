@@ -86,9 +86,9 @@ class ArduBreathalyzer(object):
 
     def index(self):
 
-        service_count = dbwrapper.get_available_services()
+        services = dbwrapper.get_available_services()
 
-        if service_count != 0:
+        if len(services) != 0:
             self._show_services = False
 
         if self._show_services:
