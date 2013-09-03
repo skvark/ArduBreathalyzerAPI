@@ -81,12 +81,13 @@ class ArduBreathalyzer(object):
 
         self._services = {'Twitter': '', 'Facebook': '', 'Foursquare': ''}
         self._statuses = {'twt': False, 'fq': False, 'fb': False}
-        self._callback_url = os.environ['URL'] + '/success'
+        self._callback_url = ''
         self._show_services = True
 
     def index(self):
 
         services = dbwrapper.get_available_services()
+        self._callback_url = cherrypy.url() + '/success'
 
         if len(services) != 0:
             self._show_services = False
