@@ -11,6 +11,7 @@ For more information about usage see documentation.
 import json
 import cherrypy
 import urllib
+import os
 
 import dbwrapper
 import servicewrapper
@@ -297,7 +298,7 @@ cherrypy.tree.mount(root, '/')
 conf = {
     'global': {
         'server.socket_host': '0.0.0.0',
-        'server.socket_port': 5050
+        'server.socket_port': int(os.environ.get('PORT', '5000'))
     },
     '/': {
         'tools.sessions.on': True,
@@ -309,5 +310,6 @@ conf = {
 }
 
 cherrypy.config.update({'log.screen': True})
+
 dbwrapper.create_tables()
 cherrypy.quickstart(root, '/', conf)
