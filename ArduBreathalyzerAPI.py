@@ -87,7 +87,7 @@ class ArduBreathalyzer(object):
     def index(self):
 
         services = dbwrapper.get_available_services()
-        self._callback_url = cherrypy.url() + '/success'
+        self._callback_url = cherrypy.url() + 'success'
 
         if len(services) != 0:
             self._show_services = False
