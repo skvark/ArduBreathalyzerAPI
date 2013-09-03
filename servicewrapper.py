@@ -127,6 +127,8 @@ def post(authtoken, bac, service, lat=None, lon=None):
 def facebook(authtoken, bac, service, lat, lon):
 
     data = dbwrapper.get_user_data(authtoken)
+    msg = "Promilleja veressä %s ‰" % bac
+
     try:
         graph = GraphAPI(data[5])
 
@@ -137,14 +139,15 @@ def facebook(authtoken, bac, service, lat, lon):
                                  LIMIT 1' % (lat, lon))
 
             if len(page_id['data'][0]) != 0:
-                graph.post('/me/feed', message='testi', retry=0, place=page_id['data'][0]['page_id'])
+                graph.post('/me/feed', message=msg, retry=0, place=page_id['data'][0]['page_id'])
             else:
-                graph.post('/me/feed', message='testi', retry=0)
+                graph.post('/me/feed', message=msg, retry=0)
 
         else:
-            graph.post('/me/feed', message='testi', retry=0)
+            graph.post('/me/feed', message=msg, retry=0)
 
         return True
+
     except:
         return False
 
@@ -160,6 +163,7 @@ def twitter(authtoken, bac, service, lat, lon):
         api = tweepy.API(auth)
         api.update_status(status=status, lat=str(lat), long=str(lon))
         return True
+
     except:
         return False
 
