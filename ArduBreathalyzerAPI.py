@@ -95,6 +95,8 @@ class ArduBreathalyzer(object):
         if self._show_services:
 
             return '\
+            <p>This form will be shown only once. Please\
+            make apps to social media services before submitting</p>\
             <form action="add_services" method="post">\
             <p>Twitter Consumer Key:</p>\
             <input type="text" name="twt_key"/>\
