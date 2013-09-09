@@ -236,7 +236,7 @@ class ArduBreathalyzer(object):
         if len(self._services['Facebook']) > 1:
 
             app_id, temp = dbwrapper.get_service_tokens('Facebook')
-            args = dict(client_id=app_id, redirect_uri=self._callback_url, scope='publish_actions,publish_stream')
+            args = dict(client_id=app_id, redirect_uri=self._callback_url, scope='publish_actions')
 
             raise cherrypy.HTTPRedirect("https://www.facebook.com/dialog/oauth?" + urllib.urlencode(args))
 
