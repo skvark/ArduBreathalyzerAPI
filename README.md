@@ -112,7 +112,7 @@ After services and user has been added, following methods can be used:
 
 __POST__
 
-http://sovellus.herokuapp.com/api/user/kuser_token/bac/service/latitude/longitude
+http://appname.herokuapp.com/api/user/user_token/bac/service/latitude/longitude
 
 Parameters:
 
@@ -125,7 +125,7 @@ Parameters:
 
 __GET__
 
-http://sovellus.herokuapp.com/api/user/year/week/weekday
+http://appname.herokuapp.com/api/user/year/week/weekday
 
 All parameters are integers. API returns data in this format:
 
