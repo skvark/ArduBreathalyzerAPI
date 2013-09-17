@@ -3,6 +3,7 @@ import binascii
 import psycopg2
 import urlparse
 import datetime
+import time
 
 # init Heroku postgresql
 urlparse.uses_netloc.append("postgres")
@@ -185,10 +186,35 @@ def get_service_tokens(service):
 
     return key, secret
 
-def get_user_bacs(user, year, week=None, day=None):
-    """ The user data for the API """
+def get_user_bacs(user, year, week, day):
+    """ The user data for the API (this function needs to enchanced) """
 
-    return
+    user_data = {}
+    user_data[user] = {}
+
+    date = time.strptime('%s %s %s' % (year, week, day), '%Y-%m-%d')
+
+    SQL = """SELECT timestamp, bac, latitude, longitude
+             FROM users
+             WHERE date = %s;
+             AND user = %s;"""
+
+    data = (date, user)
+    cur = conn.cursor()
+
+    try:
+        cur.execute(SQL, data)
+        rows = cur.fetchall()
+        conn.commit()
+    except:
+        print "Error."
+        conn.rollback()
+
+    for row in rows:
+        data = {'bac': row[1], 'lat': row[2], 'lon': row[3]}
+        user_data[user][row[0]] = data
+
+    return user_data
 
 def get_available_services():
     """ Gets services which are available (== added) """

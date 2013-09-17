@@ -24,8 +24,8 @@ class API(object):
     def __init__(self):
         pass
 
-    def GET(self, authtoken, user, year, week=None, day=None):
-        """ Gets user data. Year must be given, week and day are optional. """
+    def GET(self, authtoken, user, year, week, day):
+        """ Gets user data. """
 
         cherrypy.response.headers['Content-Type'] = 'application/json'
 

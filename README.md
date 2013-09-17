@@ -20,10 +20,10 @@ Sovellus koostuu muutamasta eri osasta:
 * *dbwrapper.py*
   - tiedosto sisältää tietokannan (PostgreSQL) kanssa tehtävät operaatiot: taulujen luominen, tietojen lisääminen, tietojen päivittäminen ja tietojen hakeminen
 * *servicewrapper.py*
-  - tiedostossa on toteutettuna Facebookin, Twitterin sekä Foursquaren kanssa kommunikointi valmiilla kirjastoilla 
+  - tiedostossa on toteutettuna Facebookin, Twitterin sekä Foursquaren kanssa kommunikointi valmiilla kirjastoilla
   - moduulilla hoidetaan Oauthin vaatimia toimintoja ja esimerkiksi käyttäjien tilan päivitys tapahtuu tämän moduulin funktioilla
 
-Tämän version pystyy ja se on __tarkoitus laittaa suoraan Herokuun__ pyörimään. Foursquare-sovelluksen voi lisätä rajapintaan, 
+Tämän version pystyy ja se on __tarkoitus laittaa suoraan Herokuun__ pyörimään. Foursquare-sovelluksen voi lisätä rajapintaan,
 mutta käyttäjän sijainnin/tilan päivitystä ei ole ainakaan vielä toteutettu.
 
 Riippuvuudet asentuvat automaattisesti `requirements.txt`-tiedoston mukaan pip:llä.
@@ -52,10 +52,10 @@ __GET__
 
 http://sovellus.herokuapp.com/api/käyttäjänimi/vuosi/viikko/viikonpäivä
 
-Käyttäjänimi ja vuosi ovat pakollisia, muut ovat vapaaehtoisia. Data palautuu JSON-formaatissa seuraavasti:
+Data palautuu JSON-formaatissa seuraavasti:
 
     [
-      ‘käyttäjänimi’: {  
+      ‘käyttäjänimi’: {
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
@@ -67,7 +67,7 @@ Sosiaalinen media ja sovellukset
 
 Jotta datan voi lähettää sosiaaliseen mediaan saakka, täytyy jokaiseen palveluun tehdä oma sovellus, jonka voi lisätä rajapintaan.
 
-Rajapinta tukee Facebookia ja Twitteriä tilan päivittämiseen saakka. 
+Rajapinta tukee Facebookia ja Twitteriä tilan päivittämiseen saakka.
 Foursquaren osalta vain sovelluksen linkitys on toteutettu eli Foursquareen ei voi lähettää dataa eteenpäin.
 
 Kyseisten sovellusten avaimet on lisättävä sovelluksen etusivulla, kun se ensimmäisen kerran avataan.
@@ -75,9 +75,9 @@ Kyseisten sovellusten avaimet on lisättävä sovelluksen etusivulla, kun se ens
 Muuta huomioitavaa
 ------------------
 
-Tarkempaa infoa löytyy MikroPC:n numerosta 9/2013. Tämä toteutus on karkea runko ja sitä on suotavaa parantaa. 
+Tarkempaa infoa löytyy MikroPC:n numerosta 9/2013. Tämä toteutus on karkea runko ja sitä on suotavaa parantaa.
 
-Rajapintaa ei ole tarkoitettu muuhun kuin hupikäyttöön. 
+Rajapintaa ei ole tarkoitettu muuhun kuin hupikäyttöön.
 Älä luovuta rajapinnan osoitetta tai salaista avaintasi kenellekään, ellet tiedä tarkalleen mitä teet.
 
 What is this?
@@ -100,7 +100,7 @@ The app consists from the following parts:
 * *dbwrapper.py*
   - PostgreSQL related stuff, database interaction
 * *servicewrapper.py*
-  - Social media stuff, Oauth and posting 
+  - Social media stuff, Oauth and posting
 
 
 Dependencies will be installed with pip by `requirements.txt`.
@@ -130,7 +130,7 @@ http://appname.herokuapp.com/api/user/year/week/weekday
 All parameters are integers. API returns data in this format:
 
     [
-      ‘username’: {  
+      ‘username’: {
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
