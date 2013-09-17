@@ -56,9 +56,9 @@ Data palautuu JSON-formaatissa seuraavasti:
 
     [
       ‘käyttäjänimi’: {
-        ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
-        ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
-        ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
+        ‘timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
+        ‘timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
+        ‘timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
       }
     ]
 
@@ -131,9 +131,9 @@ All parameters are integers. API returns data in this format:
 
     [
       ‘username’: {
-        ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
-        ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
-        ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
+        ‘timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
+        ‘timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
+        ‘timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
       }
     ]
 
