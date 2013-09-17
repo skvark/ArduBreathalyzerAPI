@@ -213,6 +213,8 @@ def get_user_bacs(user, year, week, day):
         conn.rollback()
         return {}
 
+    cur.close()
+
     for row in rows:
         data = {'bac': row[1], 'lat': row[2], 'lon': row[3]}
         user_data[user][row[0]] = data
