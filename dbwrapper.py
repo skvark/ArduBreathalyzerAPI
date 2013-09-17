@@ -193,9 +193,9 @@ def get_user_bacs(user, year, week, day):
     user_data[user] = {}
 
     date = time.strptime('%s %s %s' % (year, week, day), '%Y %W %w')
-    date = '%s-%s-%s' % (date[0], date[1], date[2])
+    date = '%s-%s-%s' % (date[0], str(date[1]).zfill(2), str(date[2]).zfill(2))
 
-    SQL = """SELECT timestamp, bac, latitude, longitude
+    SQL = """SELECT bac, latitude, longitude, timestamp
              FROM bacdata
              WHERE date_val = %s
              AND user_id = %s;"""
@@ -216,8 +216,8 @@ def get_user_bacs(user, year, week, day):
     cur.close()
 
     for row in rows:
-        data = {'bac': row[1], 'lat': row[2], 'lon': row[3]}
-        user_data[user][str(row[0])] = data
+        data = {'bac': row[0], 'lat': row[1], 'lon': row[2]}
+        user_data[user][str(row[3])] = data
 
     return user_data
 
