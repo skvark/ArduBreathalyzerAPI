@@ -207,9 +207,10 @@ def get_user_bacs(user, year, week, day):
         cur.execute(SQL, data)
         rows = cur.fetchall()
         conn.commit()
-    except:
-        print "Error."
+    except Exception as e:
+        print e
         conn.rollback()
+        return user_data
 
     for row in rows:
         data = {'bac': row[1], 'lat': row[2], 'lon': row[3]}
