@@ -4,6 +4,7 @@ import psycopg2
 import urlparse
 import datetime
 
+# init Heroku postgresql
 urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_AQUA_URL"])
 
@@ -16,6 +17,7 @@ conn = psycopg2.connect(
 )
 
 def create_tables():
+    """ Creates tables when the app is started for the first time """
 
     cur = conn.cursor()
     cur.execute('\
@@ -57,9 +59,8 @@ def create_tables():
     cur.close()
 
 # insert functions
-
-
 def insert_service_data(service, key, secret):
+    """ Inserts service data to the database """
 
     cur = conn.cursor()
     cur.execute("""INSERT INTO services (service, consumer_token_key, consumer_token_secret)
@@ -69,12 +70,13 @@ def insert_service_data(service, key, secret):
 
 
 def update_user(authtoken, tw_key='', tw_secret='', fb_token='', fq_token=''):
+    """ Updates user service tokens """
 
     cur = conn.cursor()
 
     if tw_key != '':
         SQL = """UPDATE users SET (twitter_access_token_key,
-                                 twitter_access_token_secret) = (%s, %s) WHERE authtoken=%s;"""
+                                   twitter_access_token_secret) = (%s, %s) WHERE authtoken=%s;"""
         data = (tw_key, tw_secret, authtoken)
 
     elif fb_token != '':
@@ -87,51 +89,57 @@ def update_user(authtoken, tw_key='', tw_secret='', fb_token='', fq_token=''):
 
     else:
         SQL = ''
+
     cur.execute(SQL, data)
     conn.commit()
     cur.close()
 
 def add_user(name):
+    """ Adds user and returns authtoken"""
 
     authtoken = binascii.b2a_hex(os.urandom(15))
     cur = conn.cursor()
     cur.execute("""INSERT INTO users (name,
-                                    authtoken,
-                                    twitter_access_token_key,
-                                    twitter_access_token_secret,
-                                    facebook_access_token,
-                                    foursquare_access_token)
+                                     authtoken,
+                                     twitter_access_token_key,
+                                     twitter_access_token_secret,
+                                     facebook_access_token,
+                                     foursquare_access_token)
                     VALUES (%s, %s, %s, %s, %s, %s);""",
                     (name, authtoken, None, None, None, None))
     conn.commit()
     cur.close()
     return authtoken
 
-
 def insert_bac_data(user_id, bac, latitude=None, longitude=None, service=None):
+    """ Inserts a bac entry for a user """
 
     cur = conn.cursor()
 
     date = datetime.datetime.now()
 
     try:
-        bac_query = cur.mogrify("""INSERT INTO bacdata (id, user_id, bac, latitude, longitude, service, timestamp, date)
+        bac_query = cur.mogrify("""INSERT INTO bacdata (id,
+                                                        user_id,
+                                                        bac, latitude,
+                                                        longitude,
+                                                        service,
+                                                        timestamp,
+                                                        date)
                                    VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s);""",
                                    (user_id, bac, latitude, longitude, service, 'NOW()', date.date()))
         cur.execute(bac_query)
-        print cur.query
         conn.commit()
         cur.close()
         return True
-    except Exception as e:
-        print e
+
+    except:
         conn.rollback()
         return False
 
-
 # fetch functions
-
 def check_authtoken(authtoken):
+    """ Checks given authtoken against the user table """
 
     cur = conn.cursor()
     cur.execute("SELECT authtoken FROM users WHERE authtoken=%s;", (authtoken,))
@@ -144,6 +152,7 @@ def check_authtoken(authtoken):
     return False
 
 def get_user_id(username):
+    """ Gets user id by name """
 
     cur = conn.cursor()
     cur.execute("SELECT id FROM users WHERE name=%s;", (username,))
@@ -154,6 +163,7 @@ def get_user_id(username):
     return user_id
 
 def get_user_data(authtoken):
+    """ Gets user data """
 
     cur = conn.cursor()
     cur.execute("SELECT * FROM users WHERE authtoken=%s;", (authtoken,))
@@ -164,6 +174,7 @@ def get_user_data(authtoken):
     return data
 
 def get_service_tokens(service):
+    """ Gets service tokens """
 
     cur = conn.cursor()
     cur.execute("SELECT consumer_token_key, consumer_token_secret\
@@ -175,20 +186,25 @@ def get_service_tokens(service):
     return key, secret
 
 def get_user_bacs(user, year, week=None, day=None):
+    """ The user data for the API """
 
     return
 
 def get_available_services():
+    """ Gets services which are available (== added) """
 
     services = []
     cur = conn.cursor()
+
     try:
         cur.execute("SELECT service FROM services")
         rows = cur.fetchall()
         conn.commit()
     except:
         conn.rollback()
+
     cur.close()
+
     for row in rows:
         services.append(row[0])
 

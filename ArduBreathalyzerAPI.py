@@ -16,7 +16,7 @@ import os
 import dbwrapper
 import servicewrapper
 
-
+# The REST API
 class API(object):
 
     exposed = True
@@ -346,5 +346,7 @@ conf = {
 
 cherrypy.config.update({'log.screen': True})
 
+# create tables
 dbwrapper.create_tables()
+
 cherrypy.quickstart(root, '/', conf)
