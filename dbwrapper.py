@@ -197,7 +197,7 @@ def get_user_bacs(user, year, week, day):
 
     SQL = """SELECT timestamp, bac, latitude, longitude
              FROM users
-             WHERE date = \'%s\'
+             WHERE date = %s
              AND user = %s;"""
 
     data = (date, user)
