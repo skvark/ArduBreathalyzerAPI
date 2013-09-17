@@ -51,7 +51,7 @@ def create_tables():
                 longitude FLOAT,\
                 service TEXT,\
                 timestamp TIMESTAMP NOT NULL DEFAULT NOW(),\
-                date_val DATE NOT NULL,\
+                date DATE NOT NULL,\
                 created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW());\
                 ')
 
@@ -197,7 +197,7 @@ def get_user_bacs(user, year, week, day):
 
     SQL = """SELECT bac, latitude, longitude, timestamp
              FROM bacdata
-             WHERE date_val = %s
+             WHERE date = %s
              AND user_id = %s;"""
 
     user_id = get_user_id(user)
