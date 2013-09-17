@@ -198,9 +198,10 @@ def get_user_bacs(user, year, week, day):
     SQL = """SELECT timestamp, bac, latitude, longitude
              FROM bacdata
              WHERE "date" = %s
-             AND user = %s;"""
+             AND user_id = %s;"""
 
-    data = (date, user)
+    user_id = get_user_id(user)
+    data = (date, user_id)
     cur = conn.cursor()
 
     try:
