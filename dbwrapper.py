@@ -194,19 +194,14 @@ def get_user_bacs(user, year, week, day):
 
     date = time.strptime('%s %s %s' % (year, week, day), '%Y %W %w')
     date = '%s-%s-%s' % (date[0], date[1], date[2])
-    print date
 
-    #SQL = """SELECT timestamp, bac, latitude, longitude
-    #         FROM bacdata
-    #         WHERE date = %s
-    #         AND user_id = %s;"""
-
-    SQL = """SELECT timestamp, bac, latitude, longitude, date
+    SQL = """SELECT timestamp, bac, latitude, longitude
              FROM bacdata
-             WHERE user_id = %s;"""
+             WHERE date = %s
+             AND user_id = %s;"""
 
     user_id = get_user_id(user)
-    data = (user_id)
+    data = (date, user_id)
     cur = conn.cursor()
 
     try:
@@ -222,7 +217,7 @@ def get_user_bacs(user, year, week, day):
 
     for row in rows:
         data = {'bac': row[1], 'lat': row[2], 'lon': row[3]}
-        user_data[user][row[0]] = data
+        user_data[user][str(row[0])] = data
 
     return user_data
 
