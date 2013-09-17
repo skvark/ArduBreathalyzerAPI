@@ -51,7 +51,7 @@ def create_tables():
                 longitude FLOAT,\
                 service TEXT,\
                 timestamp TIMESTAMP NOT NULL DEFAULT NOW(),\
-                date DATE NOT NULL,\
+                date_val DATE NOT NULL,\
                 created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW());\
                 ')
 
@@ -187,7 +187,7 @@ def get_service_tokens(service):
     return key, secret
 
 def get_user_bacs(user, year, week, day):
-    """ The user data for the API (this function needs to enchanced) """
+    """ The user data for the API (this function needs to be enchanced) """
 
     user_data = {}
     user_data[user] = {}
@@ -197,7 +197,7 @@ def get_user_bacs(user, year, week, day):
 
     SQL = """SELECT timestamp, bac, latitude, longitude
              FROM bacdata
-             WHERE date = %s
+             WHERE date_val = %s
              AND user_id = %s;"""
 
     user_id = get_user_id(user)
