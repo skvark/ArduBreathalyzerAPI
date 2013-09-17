@@ -128,6 +128,11 @@ class ArduBreathalyzer(object):
             Only services which are supported (added earlier) are shown.
         """
 
+        # reset the values
+        self._statuses['twt'] = False
+        self._statuses['fq'] = False
+        self._statuses['fb'] = False
+
         form = []
         services = dbwrapper.get_available_services()
 
@@ -310,6 +315,7 @@ class ArduBreathalyzer(object):
 
         data = dbwrapper.get_user_data(cherrypy.session['tokens']['authtoken'])
         del cherrypy.session['tokens']
+
 
         return 'Added user %s. <br />Secret token (save this): <b>%s</b><br />\
                 Facebook: %s, Twitter: %s, Foursquare: %s' % (data[1], data[2],
