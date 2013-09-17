@@ -29,7 +29,7 @@ class API(object):
 
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
-        data = dbwrapper.get_user_data(user, authtoken, year, week, day)
+        data = dbwrapper.get_user_data(user, year, week, day)
         return json.dumps(data)
 
     GET.exposed = True
