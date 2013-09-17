@@ -9,6 +9,7 @@ import urllib
 
 
 def check_consumer_tokens(service, key, secret):
+    """ Checks if the service tokens are ok, facebook not implemeted yet """
 
     if key != '' and secret != '':
 
@@ -34,6 +35,7 @@ def check_consumer_tokens(service, key, secret):
     return False
 
 def twitter_get_oauth_url(callback_url):
+    """ Gets the Twitter Oauth url """
 
     consumer_token, consumer_secret = dbwrapper.get_service_tokens('Twitter')
     auth = tweepy.OAuthHandler(consumer_token, consumer_secret, callback_url)
@@ -46,6 +48,7 @@ def twitter_get_oauth_url(callback_url):
     return redirect_url, auth.request_token.key, auth.request_token.secret
 
 def twitter_save_access_token(authtoken, key, secret, verifier):
+    """ Saves Twitter user tokens """
 
     auth = tweepy.OAuthHandler(key, secret)
     auth.set_request_token(key, secret)
@@ -56,11 +59,13 @@ def twitter_save_access_token(authtoken, key, secret, verifier):
         return False
 
     dbwrapper.update_user(authtoken,
-                       tw_key=auth.access_token.key,
-                       tw_secret=auth.access_token.secret)
+                          tw_key=auth.access_token.key,
+                          tw_secret=auth.access_token.secret)
     return True
 
 def facebook_save_access_token(authtoken, code, callback_url):
+    """ Saves Facebook user tokens, Oauth is done manually since the module
+        does not support it """
 
     app_id, secret = dbwrapper.get_service_tokens('Facebook')
 
@@ -74,10 +79,14 @@ def facebook_save_access_token(authtoken, code, callback_url):
         access_token = response["access_token"][-1]
         dbwrapper.update_user(authtoken, fb_token=access_token)
         return True
+
     except:
         return False
 
 def foursquare_get_oauth_url(callback_url):
+    """ This is not guaranteened to work... some problems in SSL with Foursquare.
+        Foursquare uses a wildcard SSL cert so this needs a workaround.
+        """
 
     consumer_token, consumer_secret = dbwrapper.get_service_tokens('Foursquare')
     client = foursquare.Foursquare(consumer_token,
@@ -91,25 +100,30 @@ def foursquare_get_oauth_url(callback_url):
     return auth_uri
 
 def foursquare_save_access_token(authtoken, code, callback_url):
+    """ This is not guaranteened to work... some problems in SSL with Foursquare.
+        Foursquare uses a wildcard SSL cert so this needs a workaround. """
 
     try:
         consumer_token, consumer_secret = dbwrapper.get_service_tokens('Foursquare')
+
         client = foursquare.Foursquare(consumer_token,
                                        consumer_secret,
                                        callback_url)
 
         access_token = client.oauth.get_token(code)
         dbwrapper.update_user(authtoken, fq_token=access_token)
+
         return True
+
     except Exception as e:
         print e
         return False
 
 def post(authtoken, bac, service, lat=None, lon=None):
+    """ Posts data to the services, methods dict maps the function names which
+        are called by this function """
 
     results = []
-
-    print bac
 
     if service == 'all':
 
@@ -125,6 +139,12 @@ def post(authtoken, bac, service, lat=None, lon=None):
             return False
 
 def facebook(authtoken, bac, service, lat, lon):
+    """ Facebook data posting.
+
+        Notice that the location coordinates are used with reverse search:
+        within 50 m radius of the center point all found places are listed and
+        the first one is chosen.
+    """
 
     data = dbwrapper.get_user_data(authtoken)
     msg = "Promilleja veressä %s ‰" % bac
@@ -134,12 +154,17 @@ def facebook(authtoken, bac, service, lat, lon):
 
         if lat != None:
 
+            # make a fql search for the nearby places
             page_id = graph.fql('SELECT page_id FROM place\
                                  WHERE distance(latitude, longitude, \"%s\", \"%s\") < 50\
                                  LIMIT 1' % (lat, lon))
 
             if len(page_id['data'][0]) != 0:
-                graph.post('/me/feed', message=msg, retry=0, place=page_id['data'][0]['page_id'])
+
+                graph.post('/me/feed',
+                           message=msg,
+                           retry=0,
+                           place=page_id['data'][0]['page_id'])
             else:
                 graph.post('/me/feed', message=msg, retry=0)
 
@@ -152,6 +177,7 @@ def facebook(authtoken, bac, service, lat, lon):
         return False
 
 def twitter(authtoken, bac, service, lat, lon):
+    """ Twitter data posting """
 
     key, secret = dbwrapper.get_service_tokens('Twitter')
     data = dbwrapper.get_user_data(authtoken)
