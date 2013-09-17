@@ -197,7 +197,7 @@ def get_user_bacs(user, year, week, day):
 
     SQL = """SELECT timestamp, bac, latitude, longitude
              FROM bacdata
-             WHERE "date" = %s
+             WHERE date = %s
              AND user_id = %s;"""
 
     user_id = get_user_id(user)
@@ -211,7 +211,7 @@ def get_user_bacs(user, year, week, day):
     except Exception as e:
         print e
         conn.rollback()
-        return user_data
+        return {}
 
     for row in rows:
         data = {'bac': row[1], 'lat': row[2], 'lon': row[3]}
