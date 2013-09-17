@@ -7,7 +7,7 @@ Mikä tämä on?
 -------------
 ArduBreathalyzerAPI on Pythonilla kirjoitettu karkea REST-rajapinta/web-sovellus, joka hoitaa kommunikaation Arduinoon pohjautuvan alkometrin sekä tietokannan ja sosiaalisen median välillä.
 
-Projektin taustasta sekä koodista on juttu MikroPC 9/2013:ssa. Koodin toinen puoli eli Arduinon osuus löytyy reposta [ArduBreathalyzer](https://github.com/skvark/ArduBreathalyzer).
+Projektin taustasta sekä koodista on juttu __MikroPC 9/2013__:ssa. Koodin toinen puoli eli Arduinon osuus löytyy reposta [ArduBreathalyzer](https://github.com/skvark/ArduBreathalyzer).
 
 Toiminta
 --------
@@ -23,7 +23,7 @@ Sovellus koostuu muutamasta eri osasta:
   - tiedostossa on toteutettuna Facebookin, Twitterin sekä Foursquaren kanssa kommunikointi valmiilla kirjastoilla 
   - moduulilla hoidetaan Oauthin vaatimia toimintoja ja esimerkiksi käyttäjien tilan päivitys tapahtuu tämän moduulin funktioilla
 
-Tämän version pystyy ja se on tarkoitus laittaa suoraan Herokuun pyörimään. Foursquare-sovelluksen voi lisätä rajapintaan, 
+Tämän version pystyy ja se on __tarkoitus laittaa suoraan Herokuun__ pyörimään. Foursquare-sovelluksen voi lisätä rajapintaan, 
 mutta käyttäjän sijainnin/tilan päivitystä ei ole ainakaan vielä toteutettu.
 
 Riippuvuudet asentuvat automaattisesti `requirements.txt`-tiedoston mukaan pip:llä.
@@ -61,3 +61,21 @@ Käyttäjänimi ja vuosi ovat pakollisia, muut ovat vapaaehtoisia. Data palautuu
         ‘unix_timestamp’: {‘bac’: value, ‘lat’: value, ‘lon’: value},
       }
     ]
+
+Sosiaalinen media ja sovellukset
+--------------------------------
+
+Jotta datan voi lähettää sosiaaliseen mediaan saakka, täytyy jokaiseen palveluun tehdä oma sovellus, jonka voi lisätä rajapintaan.
+
+Rajapinta tukee Facebookia ja Twitteriä tilan päivittämiseen saakka. 
+Foursquaren osalta vain sovelluksen linkitys on toteutettu eli Foursquareen ei voi lähettää dataa eteenpäin.
+
+Kyseisten sovellusten avaimet on lisättävä sovelluksen etusivulla, kun se ensimmäisen kerran avataan.
+
+Muuta huomioitavaa
+------------------
+
+Tarkempaa infoa löytyy MikroPC:n numerosta 9/2013. Tämä toteutus on karkea runko ja sitä on suotavaa parantaa. 
+
+Rajapintaa ei ole tarkoitettu muuhun kuin hupikäyttöön. 
+Älä luovuta rajapinnan osoitetta tai salaista avaintasi kenellekään, ellet tiedä tarkalleen mitä teet.
