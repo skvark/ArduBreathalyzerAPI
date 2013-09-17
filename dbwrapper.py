@@ -5,7 +5,7 @@ import urlparse
 import datetime
 
 urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_OLIVE_URL"])
+url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_AQUA_URL"])
 
 conn = psycopg2.connect(
     database=url.path[1:],

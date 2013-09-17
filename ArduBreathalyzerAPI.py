@@ -72,7 +72,7 @@ class API(object):
 
     POST.exposed = True
 
-
+# This is the app class, which implements everything else except the API
 class ArduBreathalyzer(object):
 
     exposed = True
@@ -85,8 +85,12 @@ class ArduBreathalyzer(object):
         self._show_services = True
 
     def index(self):
+        """ Index page.
+            Shows service adding form if there's no services in database. """
 
         services = dbwrapper.get_available_services()
+
+        # a bit dirty
         self._callback_url = cherrypy.url() + 'success'
 
         if len(services) != 0:
@@ -121,7 +125,7 @@ class ArduBreathalyzer(object):
 
     def add_user(self, **kwargs):
         """ Adds new user to database. Returns the authtoken for that user.
-            Only services which are supported are shown.
+            Only services which are supported (added earlier) are shown.
         """
 
         form = []
@@ -160,6 +164,7 @@ class ArduBreathalyzer(object):
             successfull = []
             unsuccessfull = []
 
+            # Twitter
             if servicewrapper.check_consumer_tokens('Twitter',
                                                      kwargs['twt_key'],
                                                      kwargs['twt_secret']):
@@ -168,9 +173,11 @@ class ArduBreathalyzer(object):
                                                kwargs['twt_key'],
                                                kwargs['twt_secret'])
                 successfull.append('Twitter')
+
             else:
                 unsuccessfull.append('Twitter')
 
+            # Foursquare
             if servicewrapper.check_consumer_tokens('Foursquare',
                                                      kwargs['fq_key'],
                                                      kwargs['fq_secret']):
@@ -179,28 +186,28 @@ class ArduBreathalyzer(object):
                                                kwargs['fq_key'],
                                                kwargs['fq_secret'])
                 successfull.append('Foursquare')
+
             else:
                 unsuccessfull.append('Foursquare')
 
-            if servicewrapper.check_consumer_tokens('Facebook',
-                                                     kwargs['fb_app_id'],
-                                                     kwargs['fb_app_secret']):
+            # Facebook, the checking is not yet implemented
+            if kwargs['fb_app_id'] != '' and kwargs['fb_app_secret'] != '':
 
                 dbwrapper.insert_service_data('Facebook',
                                                kwargs['fb_app_id'],
                                                kwargs['fb_app_secret'])
                 successfull.append('Facebook')
+
             else:
                 unsuccessfull.append('Facebook')
 
             self._show_services = False
 
-            return 'Successfully added: %s, failed: %s' % (successfull, unsuccessfull)
+            return 'Successfully added: %s, failed: %s' % (successfull,
+                                                           unsuccessfull)
 
         else:
-
             return 'Error.'
-
 
     add_services.exposed = True
 
@@ -213,13 +220,20 @@ class ArduBreathalyzer(object):
             self._services.update(kwargs)
 
         if 'user' in self._services:
+
             authtoken = dbwrapper.add_user(self._services['user'])
+
             cherrypy.session['tokens'] = {}
             cherrypy.session['tokens']['user'] = self._services['user']
             cherrypy.session['tokens']['authtoken'] = authtoken
+
+            # delete user from the dict because this method is called again
+            # in the oauth dance loop adn we don't want to add user again
             if 'user' in self._services: del self._services['user']
+
             cherrypy.lib.sessions.save()
 
+        # get the Oauth urls for every service
         if len(self._services['Twitter']) > 1:
 
             url, key, secret = servicewrapper.twitter_get_oauth_url(self._callback_url)
@@ -235,8 +249,12 @@ class ArduBreathalyzer(object):
 
         if len(self._services['Facebook']) > 1:
 
+            # Facebook module does not support Oauth so it's implemented here
             app_id, temp = dbwrapper.get_service_tokens('Facebook')
-            args = dict(client_id=app_id, redirect_uri=self._callback_url, scope='publish_actions')
+
+            args = dict(client_id=app_id,
+                        redirect_uri=self._callback_url,
+                        scope='publish_actions')
 
             raise cherrypy.HTTPRedirect("https://www.facebook.com/dialog/oauth?" + urllib.urlencode(args))
 
@@ -255,6 +273,10 @@ class ArduBreathalyzer(object):
         if len(self._services['Twitter']) > 1:
 
             self._services['Twitter'] = ''
+
+            if 'oauth_verifier' not in parameters:
+                raise cherrypy.InternalRedirect('oauth_dance')
+
             self._statuses['twt'] = servicewrapper.twitter_save_access_token(cherrypy.session['tokens']['authtoken'],
                                                                              cherrypy.session['tokens']['twitter_key'],
                                                                              cherrypy.session['tokens']['twitter_secret'],
@@ -264,6 +286,10 @@ class ArduBreathalyzer(object):
         if len(self._services['Foursquare']) > 1:
 
             self._services['Foursquare'] = ''
+
+            if 'code' not in parameters:
+                raise cherrypy.InternalRedirect('oauth_dance')
+
             self._statuses['fq'] = servicewrapper.foursquare_save_access_token(cherrypy.session['tokens']['authtoken'],
                                                                                parameters['code'],
                                                                                self._callback_url)
@@ -272,11 +298,15 @@ class ArduBreathalyzer(object):
         if len(self._services['Facebook']) > 1:
 
             self._services['Facebook'] = ''
+
+            if 'error' in parameters:
+                raise cherrypy.InternalRedirect('oauth_dance')
+
             self._statuses['fb'] = servicewrapper.facebook_save_access_token(cherrypy.session['tokens']['authtoken'],
                                                       parameters['code'],
                                                       self._callback_url)
-            raise cherrypy.InternalRedirect('oauth_dance')
 
+            raise cherrypy.InternalRedirect('oauth_dance')
 
         data = dbwrapper.get_user_data(cherrypy.session['tokens']['authtoken'])
         del cherrypy.session['tokens']
@@ -293,6 +323,7 @@ root = ArduBreathalyzer()
 root.api = API()
 cherrypy.tree.mount(root, '/')
 
+# settings for cherrypy
 conf = {
     'global': {
         'server.socket_host': '0.0.0.0',
