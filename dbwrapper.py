@@ -192,7 +192,8 @@ def get_user_bacs(user, year, week, day):
     user_data = {}
     user_data[user] = {}
 
-    date = time.strptime('%s %s %s' % (year, week, day), '%Y-%W-%w')
+    date = time.strptime('%s %s %s' % (year, week, day), '%Y %W %w')
+    date = '%s-%s-%s' % (date[0], date[1], date[2])
 
     SQL = """SELECT timestamp, bac, latitude, longitude
              FROM users
